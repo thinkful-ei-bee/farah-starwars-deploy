@@ -1,26 +1,47 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import SearchForm from './SearchForm/SearchForm'
+import ResultsList from './ResultsList/ResultsList'
 import './App.css';
 
 class App extends Component {
+  state = {
+    characters: {},
+    searchTerm: '',
+    error: null,
+  }
+
+  componentDidMount() {
+    fetch(`https://swapi.co/api/people`)
+      .then(peopleRes => peopleRes.json())
+      .then (data => {
+        //console.log(data)
+        this.setState({
+          characters: data 
+        })
+        console.log(this.state.characters)
+      })
+      .catch(err => console.log(err));
+  }
+
+  // handleSubmit = e => {
+  //   //get value for api 
+  //   e.preventDefault();
+    
+  //   //add to api
+  // }
+  
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <main className="App">
+        <h1>Search for a Star Wars Character:</h1>
+        <div className="search">
+          <SearchForm searchTerm={this.state.searchTerm} />
+        </div>
+        <div className="results">
+          <ResultsList />
+        </div>
+      </main>
     );
   }
 }
