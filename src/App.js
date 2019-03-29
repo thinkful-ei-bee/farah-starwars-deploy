@@ -10,33 +10,41 @@ class App extends Component {
     error: null,
   }
 
-  componentDidMount() {
-    fetch(`https://swapi.co/api/people`)
-      .then(peopleRes => peopleRes.json())
+  updateSearch = (searchTerm) => {
+    this.setState({searchTerm});
+  }
+
+  handleSubmit = e => {
+    e.preventDefault();
+    //get data from api
+    fetch(`https://swapi.co/api/people/?search=`+this.state.searchTerm)
+      .then(res => res.json())
       .then (data => {
-        //console.log(data)
+        // add data from api to characters
         this.setState({
           characters: data 
         })
-        console.log(this.state.characters)
+      console.log(this.characters)
       })
       .catch(err => console.log(err));
   }
 
-  // handleSubmit = e => {
-  //   //get value for api 
-  //   e.preventDefault();
-    
-  //   //add to api
-  // }
-  
 
   render() {
     return (
       <main className="App">
         <h1>Search for a Star Wars Character:</h1>
         <div className="search">
-          <SearchForm searchTerm={this.state.searchTerm} />
+          <form onSubmit={this.handleSubmit}>
+            <label htmlFor="searchStarwars">
+              Search: {' '}
+            </label>
+            <input 
+              onChange={e => this.updateSearch(e.target.value)}
+              id="searchStarwars" 
+              type="text"/>{' '}
+            <button type="submit">Go!</button>
+          </form>
         </div>
         <div className="results">
           <ResultsList />
