@@ -6,28 +6,27 @@ export default class SearchForm extends React.Component{
     validationMessages: {}
   }
 
+  updateSearch = (searchTerm) => {
+    console.log(searchTerm)
+    this.setState({searchTerm});
+  }
+
   handleSubmit = e => {
     e.preventDefault();
-    //get form fields from event
-    const search  = e.target.value;
-    console.log(search);
-    this.setState({
-      searchTerm: search,
-    })
-
     //get data from api
-    fetch(`https://swapi.co/api/people`)
-      .then(peopleRes => peopleRes.json())
+    fetch(`https://swapi.co/api/people/?search=`+this.searchTerm)
+      .then(res => res.json())
       .then (data => {
         // add data from api to characters
         this.setState({
           characters: data 
         })
-      console.log(this.characters)
+      // console.log(this.characters)
       })
       .catch(err => console.log(err));
   }
 
+  
   render(){
     return (
       <form onSubmit={e => this.handleSubmit(e)}>
@@ -35,7 +34,7 @@ export default class SearchForm extends React.Component{
             Search: {' '}
           </label>
           <input 
-            // onChange={e => this.handleSubmit(e.target.value)}
+            onChange={e => this.updateSearch(e.target.value)}
             placeholder="e.g. Luke Skywalker"
             id="searchStarwars" 
             type="text"/>{' '}
